@@ -44,5 +44,5 @@ for frame in frames:
 # =============================================================================
 fout = open("Results.csv", "w")
 for i in range(len(names)):
-    fout.write(names[i]+","+labels[int(predictions[i])]+"\n")
+    fout.write(str(predictions[i])+"\n")
 fout.close()
