@@ -25,6 +25,7 @@ labels = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "LightOn", "LightOff
 # your code goes here
 # Extract the middle frame of each gesture video
 
+
 for i in range(len(names)):
     fe.frameExtractor("./test/"+names[i], "./frames", "%#05d.png" % (i+1), 20)
 
@@ -49,7 +50,7 @@ for i in range(len(names2)):
 # Extract the middle frame of each gesture video
 
 predictions = list()
-model = tf.keras.models.load_model("./model.keras")
+model = tf.keras.models.load_model("./model.tf")
 for frame in frames:
     probabilities = model.predict(frame)
     predictions.append(np.argmax(probabilities))
