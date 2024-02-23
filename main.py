@@ -14,6 +14,7 @@ import tensorflow as tf
 
 ## import the handfeature extractor class
 import frameextractor2 as fe
+import train2 as t
 
 names = os.listdir("./test")
 labels = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "LightOn", "LightOff", "FanOn", "FanOff", "IncreaseFanSpeed", "DecreaseFanSpeed", "SetThermo"]
@@ -50,7 +51,8 @@ frames = np.array(frames)
 # Extract the middle frame of each gesture video
 
 predictions = list()
-model = tf.keras.models.load_model("./model.h5")
+#model = tf.keras.models.load_model("./model.h5")
+model = t.main()
 output = model.predict(frames)
 probabilities = tf.nn.softmax(output).numpy()
 print(probabilities)
