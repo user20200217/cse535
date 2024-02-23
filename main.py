@@ -49,7 +49,7 @@ for i in range(len(names2)):
 # Extract the middle frame of each gesture video
 
 predictions = list()
-model = tf.keras.models.load_model("./model.h5")
+model = tf.keras.models.load_model("./model.keras")
 for frame in frames:
     probabilities = model.predict(frame)
     predictions.append(np.argmax(probabilities))
