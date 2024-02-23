@@ -15,9 +15,9 @@ import numpy as np
 
 # we need 3 frames to describe a continuous motion
 
-def frameExtractor(videopath,frames_path,spacing):
-    if not os.path.exists(frames_path):
-        os.mkdir(frames_path)
+def frameExtractor(videopath,frames_dir,name,spacing):
+    if not os.path.exists(frames_dir):
+        os.mkdir(frames_dir)
     cap = cv2.VideoCapture(videopath)
     video_length = int(cap.get(cv2.CAP_PROP_FRAME_COUNT)) - 1
     frame_no= int(video_length/2)
@@ -32,5 +32,5 @@ def frameExtractor(videopath,frames_path,spacing):
     ret,frame3=cap.read()
     frame3 = cv2.resize(frame3, (200, 200))
     frame = np.vstack((frame1, frame2, frame3))
-    cv2.imwrite(frames_path, frame)
+    cv2.imwrite(frames_dir+"/"+name, frame)
     return frame

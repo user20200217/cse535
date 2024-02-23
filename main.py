@@ -25,14 +25,11 @@ labels = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "LightOn", "LightOff
 # your code goes here
 # Extract the middle frame of each gesture video
 
-frames = list()
-#for name in names:
-#    frames.append(fe.frameExtractor("./test/"+name, "./frames/", 0))
-
 for i in range(len(names)):
-    fe.frameExtractor("./test/"+names[i], "./frames"+ "/%#05d.png" % (i+1), 20)
+    fe.frameExtractor("./test/"+names[i], "./frames", "%#05d.png" % (i+1), 20)
 
 names2 = os.listdir("./frames")
+frames = list()
 for i in range(len(names2)):
     path = "./frames"+ "/%#05d.png" % (i+1)
     if os.path.exists(path):
