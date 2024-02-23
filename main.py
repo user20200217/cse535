@@ -30,11 +30,11 @@ frames = list()
 #    frames.append(fe.frameExtractor("./test/"+name, "./frames/", 0))
 
 for i in range(len(names)):
-    fe.frameExtractor("./test/"+names[i], "./frames/"+ "/%#05d.png" % (i+1), 20)
+    fe.frameExtractor("./test/"+names[i], "./frames"+ "/%#05d.png" % (i+1), 20)
 
 names2 = os.listdir("./frames")
 for i in range(len(names2)):
-    path = "./frames/"+ "/%#05d.png" % (i+1)
+    path = "./frames"+ "/%#05d.png" % (i+1)
     if os.path.exists(path):
         img = cv2.imread(path, cv2.IMREAD_GRAYSCALE)
         img = np.array(img) / 255.0
