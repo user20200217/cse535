@@ -13,8 +13,7 @@ import os
 import tensorflow as tf
 
 ## import the handfeature extractor class
-import frameextractor as fe
-import handshape_feature_extractor as hfe
+import frameextractor2 as fe
 
 names = os.listdir("./test")
 labels = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "LightOn", "LightOff", "FanOn", "FanOff", "IncreaseFanSpeed", "DecreaseFanSpeed", "SetThermo"]
@@ -26,18 +25,22 @@ labels = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "LightOn", "LightOff
 # your code goes here
 # Extract the middle frame of each gesture video
 
-frames = list()
-#for name in names:
-#    frames.append(fe.frameExtractor("./test/"+name, "./frames/", 0))
 
 for i in range(len(names)):
-    fe.frameExtractor("./test/"+names[i], "./frames/", i)
+    fe.frameExtractor("./test/"+names[i], "./frames", "%#05d.png" % (i+1), 20)
 
 names2 = os.listdir("./frames")
-for name in names2:
-    path = "./frames/"+name
-    frames.append(cv2.imread(path, cv2.IMREAD_GRAYSCALE))
+frames = list()
+for i in range(len(names2)):
+    path = "./frames"+ "/%#05d.png" % (i+1)
+    if os.path.exists(path):
+        img = cv2.imread(path, cv2.IMREAD_GRAYSCALE)
+        img = np.array(img) / 255.0
+        frames.append(img)
+    else:
+        print("error")
 
+frames = np.array(frames)
     
 
 # =============================================================================
@@ -47,11 +50,12 @@ for name in names2:
 # Extract the middle frame of each gesture video
 
 predictions = list()
-hsfe = hfe.HandShapeFeatureExtractor()
-for frame in frames:
-    output = hsfe.extract_feature(frame)[0]
-    probabilities = tf.nn.softmax(output).numpy()
-    predictions.append(np.argmax(probabilities))
+model = tf.keras.models.load_model("./model.h5")
+output = model.predict(frames)
+probabilities = tf.nn.softmax(output).numpy()
+print(probabilities)
+predictions=np.argmax(probabilities, axis=1)
+print(predictions)
 
 # =============================================================================
 # Recognize the gesture (use cosine similarity for comparing the vectors)
