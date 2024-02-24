@@ -3,7 +3,7 @@
 Created on Thu Jan 28 00:44:25 2021
 
 @author: chakati
-# edited by Kai Chi on 2/21/2024
+# edited by Kai Chi on 2/23/2024
 # CSE535
 # Arizona State University
 """
@@ -28,23 +28,16 @@ def main():
     # your code goes here
     # Extract the middle frames of each gesture video
 
+    frames = list()
     y_train = np.zeros(len(names))
     for i in range(len(names)):
-        fe.frameExtractor("./train/"+names[i], "./frames", "%#05d.png" % (i+1), 20)
+        frame = fe.frameExtractor("./train/"+names[i])
+        frame = frame / 255.0
         for j in (range(len(labels))):
             if names[i].endswith(labels[j]):
                 y_train[i] = j
                 break
-
-    frames = list()
-    for i in range(len(names)):
-        path = "./frames"+"/%#05d.png" % (i+1)
-        if os.path.exists(path):
-            img = cv2.imread(path, cv2.IMREAD_GRAYSCALE)
-            img = np.array(img) / 255.0
-            frames.append(img)
-        else:
-            print("error")
+        frames.append(frame)
 
     X_train = np.array(frames)
     print(X_train.shape, y_train.shape)
@@ -54,11 +47,16 @@ def main():
     # =============================================================================
 
     model = tf.keras.models.Sequential([
-    tf.keras.layers.Flatten(input_shape=(600, 200)),  # 600 x 200 grayscale images
-        tf.keras.layers.Dense(17),  # last layer should be the size of the output
+        tf.keras.layers.Input(shape=(200, 200, 3)),  # 200 x 200 RGB images
+        tf.keras.layers.Conv2D(3,3),
+        tf.keras.layers.MaxPooling2D(),
+        tf.keras.layers.Conv2D(3,3),
+        tf.keras.layers.MaxPooling2D(),
+        tf.keras.layers.Flatten(),
+        tf.keras.layers.Dense(1000, activation="relu"),
+        tf.keras.layers.Dense(17, activation="softmax"),  # last layer should be the size of the output
     ])
-    loss_fn = tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True)
-    model.compile(optimizer='adam', loss=loss_fn, metrics=['accuracy'])
+    model.compile(optimizer="adam", loss="sparse_categorical_crossentropy", metrics="accuracy")
     model.fit(X_train, y_train, epochs=50)
 
     # =============================================================================

@@ -3,7 +3,7 @@
 Created on Thu Jan 28 00:44:25 2021
 
 @author: chakati
-# edited by Kai Chi on 2/21/2024
+# edited by Kai Chi on 2/23/2024
 # CSE535
 # Arizona State University
 """
@@ -26,20 +26,11 @@ labels = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "LightOn", "LightOff
 # your code goes here
 # Extract the middle frame of each gesture video
 
-
-for i in range(len(names)):
-    fe.frameExtractor("./test/"+names[i], "./frames", "%#05d.png" % (i+1), 20)
-
-names2 = os.listdir("./frames")
 frames = list()
-for i in range(len(names2)):
-    path = "./frames"+ "/%#05d.png" % (i+1)
-    if os.path.exists(path):
-        img = cv2.imread(path, cv2.IMREAD_GRAYSCALE)
-        img = np.array(img) / 255.0
-        frames.append(img)
-    else:
-        print("error")
+for i in range(len(names)):
+    frame = fe.frameExtractor("./test/"+names[i])
+    frame = frame / 255.0
+    frames.append(frame)
 
 frames = np.array(frames)
     
@@ -53,9 +44,7 @@ frames = np.array(frames)
 predictions = list()
 #model = tf.keras.models.load_model("./model.h5")
 model = t.main()
-output = model.predict(frames)
-probabilities = tf.nn.softmax(output).numpy()
-print(probabilities)
+probabilities = model.predict(frames)
 predictions=np.argmax(probabilities, axis=1)
 print(predictions)
 
